@@ -1,0 +1,12 @@
+...
+CC [M]  drivers/char/azabell_led.o
+...
+CC [M]  drivers/char/azabell_led.mod.o
+...
+LD [M]  drivers/char/azabell_led.ko
+
+$ sudo make -j$(nproc) ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- Image modules dtbs 2>&1 | tee build.log
+이 로그에 남겨져야 정상 빌드
+
+1. menuconfig에서 Char driver에 들어가서 GPIO를 [M]으로 활성화
+2. kernel_module에서 driver/char에 있는 azabell_led.c 선 빌드 후 .ko 생성

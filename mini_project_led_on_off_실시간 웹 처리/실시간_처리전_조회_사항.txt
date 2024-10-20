@@ -1,0 +1,16 @@
+$ libcamera-hello --list-cameras
+Available cameras
+-----------------
+0 : ov5647 [2592x1944 10-bit GBRG] (/base/axi/pcie@120000/rp1/i2c@80000/ov5647@36)
+    Modes:  'SEBRG10_CSI2P' :   640x480 [58.92 fps - (16, 0)/2560x1920 crop]
+                                1296x972 [43.25 fps - (0, 0)/2560x1944 crop]
+                                1920x1080 [30.62 fps - (348, 434)/1928x1080 crop]
+                                2592x1944 [15.63 fps - (0, 0)/2560x1944 crop]
+따라서, 서버 스트리밍 시작시
+sudo gst-launch-1.0 libcamerasrc came
+ra-name="/base/axi/pcie@120000/rp1/i2c@80000/ov5647@36" ! video/x-raw,colori
+metry=bt709,format=NV12,width=1920,height=1080,framerate=30/1 ! queue ! jpeg
+enc ! queue ! multipartmux ! queue ! tcpserversink host=0.0.0.0 port=5000
+
+- 클라이언트에서 받기
+gst-launch-1.0 tcpclientsrc host=192.168.0.105 port=5000 ! multipartdemux ! jpegdec ! autovideosinkcd 

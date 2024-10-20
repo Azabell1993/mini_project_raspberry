@@ -1,0 +1,1 @@
+g++ -o web_cap_server web_cap_server.cpp $(pkg-config --cflags --libs opencv4 gstreamer-1.0 gstreamer-app-1.0) -lwiringPi -lpthread

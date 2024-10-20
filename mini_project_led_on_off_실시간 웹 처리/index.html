@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LED Control and Camera Capture</title>
+    <style>
+        body {
+            background-color: #F58220;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+
+        h1 {
+            margin-bottom: 50px;
+        }
+
+        button {
+            background-color: white;
+            color: #F58220;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            margin: 20px;
+            border-radius: 8px;
+        }
+
+        button:hover {
+            background-color: #F58220;
+            color: white;
+            border: 2px solid white;
+        }
+
+        img,
+        video {
+            margin-top: 30px;
+            width: 80%;
+            height: auto;
+            border: 2px solid white;
+        }
+    </style>
+    <script>
+        function sendRequest(action) {
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "/" + action, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    if (action === 'load') {
+                        alert('LED가 켜졌습니다! 카메라 캡처가 진행되었습니다.');
+                        document.getElementById('capturedImage').src = '/captured_image.jpg';
+                        // 스트리밍을 위해 클라이언트에서 GStreamer 명령 실행
+                        document.getElementById('stream').innerHTML = '실시간 스트리밍이 시작되었습니다.';
+                    } else if (action === 'unload') {
+                        alert('LED가 꺼졌습니다!');
+                        document.getElementById('stream').innerHTML = '스트리밍이 중지되었습니다.';
+                    }
+                }
+            };
+            xhr.send();
+        }
+    </script>
+</head>
+
+<body>
+    <h1>LED Control and Camera Capture</h1>
+    <button onclick="sendRequest('load')">Load LED Module & Capture</button>
+    <button onclick="sendRequest('unload')">Unload LED Module</button>
+
+    <img id="capturedImage" src="/captured_image.jpg" alt="Captured Image" width="600">
+
+</body>
+
+</html>

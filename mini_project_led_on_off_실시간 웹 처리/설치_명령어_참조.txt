@@ -1,0 +1,6 @@
+**설치 명령어**
+1. **GStreamer 라이브러리**
+sudo apt-get install gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav
+
+2. **GStreamer 설치 헤더**
+sudo apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
