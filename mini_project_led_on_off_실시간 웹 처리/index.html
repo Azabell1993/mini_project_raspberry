@@ -80,6 +80,8 @@
                         document.getElementById('pinoutInfo').innerText = xhr.responseText;
                     } else if (action === 'modules') {
                         document.getElementById('moduleInfo').innerText = xhr.responseText;
+                    } else if (action === 'pir') {
+                        document.getElementById('pirStatus').innerText = xhr.responseText;
                     }
                 }
             };
