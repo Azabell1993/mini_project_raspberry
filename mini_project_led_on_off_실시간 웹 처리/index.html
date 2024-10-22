@@ -4,43 +4,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LED Control and Camera Capture</title>
+    <title>Smart Home Control</title>
     <style>
         body {
-            background-color: #F58220;
-            color: white;
+            background-color: #f0f0f0;
+            color: #333;
             font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 50px;
+            padding: 20px;
         }
 
         h1 {
-            margin-bottom: 50px;
+            color: #F58220;
+            margin-bottom: 20px;
         }
 
         button {
-            background-color: white;
-            color: #F58220;
+            background-color: #F58220;
+            color: white;
             border: none;
-            padding: 15px 30px;
-            font-size: 18px;
+            padding: 10px 20px;
+            font-size: 16px;
             cursor: pointer;
-            margin: 20px;
-            border-radius: 8px;
+            margin: 10px;
+            border-radius: 5px;
         }
 
         button:hover {
-            background-color: #F58220;
-            color: white;
-            border: 2px solid white;
+            background-color: #333;
+            color: #F58220;
         }
 
-        img,
-        video {
-            margin-top: 30px;
-            width: 80%;
-            height: auto;
-            border: 2px solid white;
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            margin: 10px;
+            border-radius: 5px;
+            width: 70%;
+        }
+
+        .search-container {
+            margin-top: 20px;
+        }
+
+        .info {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            font-size: 14px;
+            white-space: pre-wrap;
+            background-color: #f9f9f9;
+        }
+
+        #searchResult, #pirStatus {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            font-size: 14px;
+            white-space: pre-wrap;
+            background-color: #f9f9f9;
         }
     </style>
     <script>
@@ -50,28 +72,65 @@
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4 && xhr.status == 200) {
                     if (action === 'load') {
-                        alert('LED가 켜졌습니다! 카메라 캡처가 진행되었습니다.');
+                        alert('LED 모듈이 로드되고 카메라가 캡처되었습니다.');
                         document.getElementById('capturedImage').src = '/captured_image.jpg';
-                        // 스트리밍을 위해 클라이언트에서 GStreamer 명령 실행
-                        document.getElementById('stream').innerHTML = '실시간 스트리밍이 시작되었습니다.';
                     } else if (action === 'unload') {
-                        alert('LED가 꺼졌습니다!');
-                        document.getElementById('stream').innerHTML = '스트리밍이 중지되었습니다.';
+                        alert('LED 모듈이 언로드되었습니다.');
+                    } else if (action === 'pinout') {
+                        document.getElementById('pinoutInfo').innerText = xhr.responseText;
+                    } else if (action === 'modules') {
+                        document.getElementById('moduleInfo').innerText = xhr.responseText;
                     }
                 }
             };
             xhr.send();
         }
+
+        function searchModule() {
+            const searchTerm = document.getElementById('searchTerm').value;
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "/search?term=" + searchTerm, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    document.getElementById('searchResult').innerText = xhr.responseText;
+                }
+            };
+            xhr.send();
+        }
+
+        function handleImageError() {
+            const imageElement = document.getElementById('capturedImage');
+            imageElement.src = '';
+            imageElement.alt = '로드할 이미지 없음';
+            imageElement.style.display = 'none'; // 이미지가 로드되지 않으면 숨김 처리
+            const noImageText = document.createElement('p');
+            noImageText.innerText = '로드할 이미지 없음';
+            noImageText.style.color = '#F58220';
+            imageElement.parentNode.appendChild(noImageText); // 텍스트 추가
+        }
     </script>
 </head>
 
 <body>
-    <h1>LED Control and Camera Capture</h1>
+    <h1>Smart Home Control Panel</h1>
     <button onclick="sendRequest('load')">Load LED Module & Capture</button>
     <button onclick="sendRequest('unload')">Unload LED Module</button>
-
+    <button onclick="sendRequest('pinout')">GPIO Pinout 조회</button>
+    <button onclick="sendRequest('modules')">로드된 모듈 조회</button>
+    
+    <br/>
     <img id="capturedImage" src="/captured_image.jpg" alt="Captured Image" width="600">
+    <br/>
 
+    <div class="info" id="pinoutInfo">GPIO 핀아웃 정보가 여기에 표시됩니다.</div>
+    <div class="info" id="moduleInfo">로드된 모듈 정보가 여기에 표시됩니다.</div>
+
+    <div class="search-container">
+        <h2>Module Search</h2>
+        <input type="text" id="searchTerm" placeholder="Enter module name (e.g., azabell_led)">
+        <button onclick="searchModule()">Search Module</button>
+        <div id="searchResult">검색 결과가 여기에 표시됩니다.</div>
+    </div>
 </body>
 
 </html>
