@@ -110,11 +110,26 @@
             noImageText.style.color = '#F58220';
             imageElement.parentNode.appendChild(noImageText); // 텍스트 추가
         }
+
+        function moveCamera(direction) {
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "/" + direction, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    alert(xhr.responseText);
+                }
+            };
+            xhr.send();
+        }
     </script>
 </head>
 
 <body>
     <h1>Smart Home Control Panel</h1>
+    <h1>Camera Motor Control</h1>
+    <button onclick="moveCamera('left')">좌회전</button>
+    <button onclick="moveCamera('right')">우회전</button>
+
     <button onclick="sendRequest('load')">Load LED Module & Capture</button>
     <button onclick="sendRequest('unload')">Unload LED Module</button>
     <button onclick="sendRequest('pinout')">GPIO Pinout 조회</button>
@@ -136,3 +151,4 @@
 </body>
 
 </html>
+
