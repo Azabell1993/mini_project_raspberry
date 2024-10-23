@@ -64,6 +64,10 @@
             white-space: pre-wrap;
             background-color: #f9f9f9;
         }
+
+        #videoStream {
+            display: none;
+        }
     </style>
     <script>
         function sendRequest(action) {
@@ -72,10 +76,12 @@
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4 && xhr.status == 200) {
                     if (action === 'load') {
-                        alert('LED 모듈이 로드되고 카메라가 캡처되었습니다.');
+                        alert('LED 모듈이 로드되고 스트리밍 확인이 가능하십니다.');
+                        document.getElementById('videoStream').style.display = 'block'; // 비디오 태그 노출
                         document.getElementById('capturedImage').src = '/captured_image.jpg';
                     } else if (action === 'unload') {
                         alert('LED 모듈이 언로드되었습니다.');
+                        document.getElementById('videoStream').style.display = 'none'; // 비디오 태그 숨김
                     } else if (action === 'pinout') {
                         document.getElementById('pinoutInfo').innerText = xhr.responseText;
                     } else if (action === 'modules') {
@@ -98,17 +104,6 @@
                 }
             };
             xhr.send();
-        }
-
-        function handleImageError() {
-            const imageElement = document.getElementById('capturedImage');
-            imageElement.src = '';
-            imageElement.alt = '로드할 이미지 없음';
-            imageElement.style.display = 'none'; // 이미지가 로드되지 않으면 숨김 처리
-            const noImageText = document.createElement('p');
-            noImageText.innerText = '로드할 이미지 없음';
-            noImageText.style.color = '#F58220';
-            imageElement.parentNode.appendChild(noImageText); // 텍스트 추가
         }
 
         function moveCamera(direction) {
@@ -135,8 +130,8 @@
     <button onclick="sendRequest('pinout')">GPIO Pinout 조회</button>
     <button onclick="sendRequest('modules')">로드된 모듈 조회</button>
     
-    <br/>
-    <img id="capturedImage" src="/captured_image.jpg" alt="Captured Image" width="600">
+    <h2>camera Stream space</h2>
+    <img id="videoStream" src="http://192.168.0.105:5050/video" alt="Live Video Stream" width="600">
     <br/>
 
     <div class="info" id="pinoutInfo">GPIO 핀아웃 정보가 여기에 표시됩니다.</div>
@@ -151,4 +146,3 @@
 </body>
 
 </html>
-
