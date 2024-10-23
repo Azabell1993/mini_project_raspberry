@@ -31,7 +31,7 @@ void get_pinout(int client_fd);
 void get_loaded_modules(int client_fd);
 void search_module(int client_fd, const std::string &term);
 void send_html(int client_fd, const char *filename);
-void serve_image(int client_fd);
+// void serve_image(int client_fd);
 void *handle_client(void *arg);
 void send_pir_status(int client_fd);
 void motorPwmControl(int gpio, int speed);
@@ -160,28 +160,28 @@ void send_html(int client_fd, const char *filename) {
 }
 
 // 이미지 파일 전송
-void serve_image(int client_fd) {
-    std::ifstream file("/tmp/captured_image.jpg", std::ios::binary);
-    if (!file) {
-        // 파일이 없을 경우 404 응답
-        string not_found = "HTTP/1.1 404 Not Found\r\nContent-Type: text/plain\r\n\r\n404 Not Found";
-        send(client_fd, not_found.c_str(), not_found.size(), 0);
-        close(client_fd);
-        return;
-    }
+// void serve_image(int client_fd) {
+//     std::ifstream file("/tmp/captured_image.jpg", std::ios::binary);
+//     if (!file) {
+//         // 파일이 없을 경우 404 응답
+//         string not_found = "HTTP/1.1 404 Not Found\r\nContent-Type: text/plain\r\n\r\n404 Not Found";
+//         send(client_fd, not_found.c_str(), not_found.size(), 0);
+//         close(client_fd);
+//         return;
+//     }
 
-    // HTTP 헤더 전송
-    string header = "HTTP/1.1 200 OK\r\nContent-Type: image/jpeg\r\n\r\n";
-    send(client_fd, header.c_str(), header.size(), 0);
+//     // HTTP 헤더 전송
+//     string header = "HTTP/1.1 200 OK\r\nContent-Type: image/jpeg\r\n\r\n";
+//     send(client_fd, header.c_str(), header.size(), 0);
 
-    // 이미지 데이터를 클라이언트로 전송
-    char buffer[1024];
-    while (file.read(buffer, sizeof(buffer))) {
-        send(client_fd, buffer, file.gcount(), 0);
-    }
-    file.close();
-    close(client_fd);
-}
+//     // 이미지 데이터를 클라이언트로 전송
+//     char buffer[1024];
+//     while (file.read(buffer, sizeof(buffer))) {
+//         send(client_fd, buffer, file.gcount(), 0);
+//     }
+//     file.close();
+//     close(client_fd);
+// }
 
 // GPIO 핀아웃 정보 제공
 void get_pinout(int client_fd) {
@@ -262,9 +262,11 @@ void *handle_client(void *arg) {
 
     if (strstr(buffer, "GET /index.html") != nullptr) {
         send_html(client_socket, "index.html");
-    } else if (strstr(buffer, "GET /captured_image.jpg") != nullptr) {
-        serve_image(client_socket);
-    } else if (strstr(buffer, "GET /load") != nullptr) {
+    }
+    // else if (strstr(buffer, "GET /captured_image.jpg") != nullptr) {
+    //    serve_image(client_socket);
+    //}
+    else if (strstr(buffer, "GET /load") != nullptr) {
         turn_on_led();
         capture_image();
         string response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\nLED 모듈이 로드되었습니다.";
