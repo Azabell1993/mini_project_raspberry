@@ -293,15 +293,15 @@ void *handle_client(void *arg) {
         motorDirectionControl(MOTOR_DIR_PIN_A, MOTOR_DIR_PIN_B, 0);
         std::thread motor_thread(motorControlThread, 50, 100); // 속도 50, 100ms 동안 동작
         motor_thread.detach();  // 스레드를 분리하여 실행
-        string response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n좌회전 중입니다.";
-        send(client_socket, response.c_str(), response.size(), 0);
+        // string response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n좌회전 중입니다.";
+        // send(client_socket, response.c_str(), response.size(), 0);
     } else if (strstr(buffer, "GET /right") != nullptr && !motor_active) {
         // 우회전
         motorDirectionControl(MOTOR_DIR_PIN_A, MOTOR_DIR_PIN_B, 1);
         std::thread motor_thread(motorControlThread, 50, 100); // 속도 50, 100ms 동안 동작
         motor_thread.detach();  // 스레드를 분리하여 실행
-        string response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n우회전 중입니다.";
-        send(client_socket, response.c_str(), response.size(), 0);
+        // string response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\r\n우회전 중입니다.";
+        // send(client_socket, response.c_str(), response.size(), 0);
     } 
     
     else {
