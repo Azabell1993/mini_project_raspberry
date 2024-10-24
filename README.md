@@ -7,6 +7,7 @@
 
 
 ### 코드 구조
+> 폴더명 [mini_project_led_on_off_실시간 웹 처리] 참조
 ```
 pi@azabellraspberry:~/Desktop/pjt2 $ tree
 .
